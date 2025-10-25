@@ -12,8 +12,6 @@ if ($null -eq $RUNNER_TOOL_CACHE) {
 }
 $PREFIX = Join-Path $RUNNER_TOOL_CACHE "mysql" $MYSQL_VERSION "x64"
 
-$ACTION_VERSION = Get-Content (Join-Path $ROOT ".." "package.json") | jq -r ".version"
-
 if (Test-Path "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat") {
     Write-Host "::group::Set up Visual Studio 2022"
     New-Item $RUNNER_TEMP -ItemType Directory -Force
@@ -169,7 +167,7 @@ Set-Location build
 if ( $MYSQL_VERSION -match '^([1-9][0-9][.]|9[.])' ) # MySQL 9.0 or later
 {
     cmake ( Join-Path $RUNNER_TEMP "mysql-server-mysql-$MYSQL_VERSION" ) `
-        -DCOMPILATION_COMMENT="shogo82148/actions-setup-mysql@v$ACTION_VERSION" `
+        -DCOMPILATION_COMMENT="shogo82148/build-mysql" `
         -DWITH_UNIT_TESTS=0 `
         -DWITH_AUTHENTICATION_CLIENT_PLUGINS=1 `
         -DCMAKE_INSTALL_PREFIX="$PREFIX" `
@@ -179,7 +177,7 @@ if ( $MYSQL_VERSION -match '^([1-9][0-9][.]|9[.])' ) # MySQL 9.0 or later
 elseif ( $MYSQL_VERSION -match '^8[.]' ) # MySQL 8.0
 {
     cmake ( Join-Path $RUNNER_TEMP "mysql-server-mysql-$MYSQL_VERSION" ) `
-        -DCOMPILATION_COMMENT="shogo82148/actions-setup-mysql@v$ACTION_VERSION" `
+        -DCOMPILATION_COMMENT="shogo82148/build-mysql" `
         -DDOWNLOAD_BOOST=1 -DWITH_BOOST="$BOOST" `
         -DWITH_UNIT_TESTS=0 `
         -DCMAKE_INSTALL_PREFIX="$PREFIX" `
@@ -189,7 +187,7 @@ elseif ( $MYSQL_VERSION -match '^8[.]' ) # MySQL 8.0
 else
 {
     cmake ( Join-Path $RUNNER_TEMP "mysql-server-mysql-$MYSQL_VERSION" ) `
-        -DCOMPILATION_COMMENT="shogo82148/actions-setup-mysql@v$ACTION_VERSION" `
+        -DCOMPILATION_COMMENT="shogo82148/build-mysql" `
         -DDOWNLOAD_BOOST=1 -DWITH_BOOST="$BOOST" `
         -DWITH_ROCKSDB_LZ4=0 -DWITH_ROCKSDB_BZip2=0 -DWITH_ROCKSDB_Snappy=0 -DWITH_ROCKSDB_ZSTD=0 `
         -DWITH_UNIT_TESTS=0 `
