@@ -109,13 +109,13 @@ echo "::group::extract MySQL source"
 
     # apply patches
     cd "mysql-server-mysql-$MYSQL_VERSION"
-    if [[ -d "$ROOT/../patches/mysql/$MYSQL_VERSION" ]]
+    if [[ -d "$ROOT/patches/mysql/$MYSQL_VERSION" ]]
     then
-        cat "$ROOT/../patches/mysql/$MYSQL_VERSION"/*.patch | patch -s -f -p1
+        cat "$ROOT/patches/mysql/$MYSQL_VERSION"/*.patch | patch -s -f -p1
     fi
-    if [[ -d "$ROOT/../patches/mysql/$MYSQL_VERSION/darwin" ]]
+    if [[ -d "$ROOT/patches/mysql/$MYSQL_VERSION/darwin" ]]
     then
-        cat "$ROOT/../patches/mysql/$MYSQL_VERSION/darwin"/*.patch | patch -s -f -p1
+        cat "$ROOT/patches/mysql/$MYSQL_VERSION/darwin"/*.patch | patch -s -f -p1
     fi
 )
 echo "::endgroup::"
