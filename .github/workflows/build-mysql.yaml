@@ -19,34 +19,15 @@ jobs:
       - id: set-matrix
         run: |
           {
-            echo "matrix-darwin=$(printenv MYSQL_VERSIONS | jq -c '{mysql: .}')"
+            echo "matrix-darwin=$(printenv MYSQL_VERSIONS | jq -c '{mysql: ., os: ["macos-13", "macos-14"]}')"
           } >> "$GITHUB_OUTPUT"
         env:
           MYSQL_VERSIONS: ${{ github.event.inputs.mysql-versions }}
     outputs:
       matrix-darwin: ${{ steps.set-matrix.outputs.matrix-darwin }}
 
-  build-darwin-arm64:
-    runs-on: macos-14
-    needs: list
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson(needs.list.outputs.matrix-darwin) }}
-    timeout-minutes: 180
-    steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      - name: install bison
-        run: |
-          # pre-installed version is too old.
-          # install new one.
-          brew install bison
-      - name: build MySQL
-        run: ./build-mysql-darwin.sh "$MYSQL_VERSION"
-        env:
-          MYSQL_VERSION: ${{ matrix.mysql }}
-
-  build-darwin-x64:
-    runs-on: macos-13
+  build-darwin:
+    runs-on: ${{ matrix.os}}
     needs: list
     strategy:
       fail-fast: false
