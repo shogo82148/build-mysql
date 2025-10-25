@@ -1,0 +1,46 @@
+name: "Build MySQL"
+on:
+  workflow_dispatch:
+    inputs:
+      mysql-versions:
+        description: MySQL versions to build (JSON Array)
+        required: true
+        default: ""
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  list:
+    runs-on: ubuntu-latest
+    steps:
+      - id: set-matrix
+        run: |
+          {
+            echo "matrix-darwin=$(printenv MYSQL_VERSIONS | jq -c '{mysql: .}')"
+          } >> "$GITHUB_OUTPUT"
+        env:
+          MYSQL_VERSIONS: ${{ github.event.inputs.mysql-versions }}
+    outputs:
+      matrix-darwin: ${{ steps.set-matrix.outputs.matrix-darwin }}
+
+  build-darwin-arm64:
+    runs-on: macos-14
+    needs: list
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.list.outputs.matrix-darwin) }}
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: install bison
+        run: |
+          # pre-installed version is too old.
+          # install new one.
+          brew install bison
+      - name: build MySQL
+        run: ./build-mysql-darwin.sh "$MYSQL_VERSION"
+        env:
+          MYSQL_VERSION: ${{ matrix.mysql }}
