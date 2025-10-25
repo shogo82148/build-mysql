@@ -21,12 +21,14 @@ jobs:
           {
             echo "matrix-linux=$(printenv MYSQL_VERSIONS | jq -c '{mysql: . , os: ["ubuntu-24.04", "ubuntu-22.04", "ubuntu-24.04-arm", "ubuntu-22.04-arm"]}')"
             echo "matrix-darwin=$(printenv MYSQL_VERSIONS | jq -c '{mysql: ., os: ["macos-13", "macos-14"]}')"
+            echo "matrix-windows=$(printenv MYSQL_VERSIONS | jq -c '{mysql: .}')"
           } >> "$GITHUB_OUTPUT"
         env:
           MYSQL_VERSIONS: ${{ github.event.inputs.mysql-versions }}
     outputs:
       matrix-linux: ${{ steps.set-matrix.outputs.matrix-linux }}
       matrix-darwin: ${{ steps.set-matrix.outputs.matrix-darwin }}
+      matrix-windows: ${{ steps.set-matrix.outputs.matrix-windows }}
 
   build-linux:
     runs-on: ${{ matrix.os}}
@@ -58,5 +60,19 @@ jobs:
           brew install bison
       - name: build MySQL
         run: ./build-mysql-darwin.sh "$MYSQL_VERSION"
+        env:
+          MYSQL_VERSION: ${{ matrix.mysql }}
+
+  build-windows:
+    runs-on: windows-2022
+    needs: list
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.list.outputs.matrix-windows) }}
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: build MySQL
+        run: .\build-mysql-windows.ps1 $env:MYSQL_VERSION
         env:
           MYSQL_VERSION: ${{ matrix.mysql }}
