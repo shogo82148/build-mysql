@@ -30,8 +30,6 @@ JOBS=$(sysctl -n hw.logicalcpu_max)
 mkdir -p "$RUNNER_TEMP"
 cd "$RUNNER_TEMP"
 
-ACTION_VERSION=$(jq -r '.version' < "$ROOT/../package.json")
-
 # system SSL/TLS library is too old. so we use custom build.
 
 if [[ "$MYSQL_VERSION" =~ ^([1-9][0-9][.]|[89][.]) ]]; then # MySQL 8.0 or later
@@ -74,7 +72,7 @@ else
     )
     echo "::endgroup::"
 
-    echo "::group::extract OpenSSL 1.1 source"
+    echo "::group::extract OpenSSL 1.1.1 source"
     (
         set -eux
         cd "$RUNNER_TEMP"
@@ -82,7 +80,7 @@ else
     )
     echo "::endgroup::"
 
-    echo "::group::build OpenSSL 1.1"
+    echo "::group::build OpenSSL 1.1.1"
     (
         set -eux
         cd "$RUNNER_TEMP/openssl-OpenSSL_$OPENSSL_VERSION"
@@ -130,21 +128,21 @@ echo "::group::build MySQL"
     cd build
     if [[ "$MYSQL_VERSION" =~ ^([1-9][0-9][.]|9[.]) ]]; then # MySQL 9.0 or later
         cmake "../mysql-server-mysql-$MYSQL_VERSION" \
-            -DCOMPILATION_COMMENT="shogo82148/actions-setup-mysql@v$ACTION_VERSION" \
+            -DCOMPILATION_COMMENT="shogo82148/build-mysql" \
             -DWITH_UNIT_TESTS=0 \
             -DWITH_AUTHENTICATION_CLIENT_PLUGINS=1 \
             -DCMAKE_INSTALL_PREFIX="$PREFIX" \
             -DWITH_SSL="$PREFIX"
     elif [[ "$MYSQL_VERSION" =~ ^8[.] ]]; then # MySQL 8.0
         cmake "../mysql-server-mysql-$MYSQL_VERSION" \
-            -DCOMPILATION_COMMENT="shogo82148/actions-setup-mysql@v$ACTION_VERSION" \
+            -DCOMPILATION_COMMENT="shogo82148/build-mysql" \
             -DDOWNLOAD_BOOST=1 -DWITH_BOOST=../boost \
             -DWITH_UNIT_TESTS=0 \
             -DCMAKE_INSTALL_PREFIX="$PREFIX" \
             -DWITH_SSL="$PREFIX"
     else
         cmake "../mysql-server-mysql-$MYSQL_VERSION" \
-            -DCOMPILATION_COMMENT="shogo82148/actions-setup-mysql@v$ACTION_VERSION" \
+            -DCOMPILATION_COMMENT="shogo82148/build-mysql" \
             -DDOWNLOAD_BOOST=1 -DWITH_BOOST=../boost \
             -DWITH_ROCKSDB_LZ4=0 -DWITH_ROCKSDB_BZip2=0 -DWITH_ROCKSDB_Snappy=0 -DWITH_ROCKSDB_ZSTD=0 \
             -DWITH_UNIT_TESTS=0 \
