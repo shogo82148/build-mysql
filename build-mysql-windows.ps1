@@ -147,13 +147,13 @@ Write-Host "Unzipping..."
 choco install patch
 Expand-Archive -Path "mysql-src.zip" -DestinationPath "."
 Remove-Item -Path "mysql-src.zip"
-if (Test-Path ( Join-Path $ROOT .. "patches" "mysql" $MYSQL_VERSION )) {
+if (Test-Path ( Join-Path $ROOT "patches" "mysql" $MYSQL_VERSION )) {
     Set-Location ( Join-Path $RUNNER_TEMP "mysql-server-mysql-$MYSQL_VERSION" )
-    Get-Content ( Join-Path $ROOT .. "patches" "mysql" $MYSQL_VERSION *.patch ) | patch -s -f -p1
+    Get-Content ( Join-Path $ROOT "patches" "mysql" $MYSQL_VERSION *.patch ) | patch -s -f -p1
 }
-if (Test-Path ( Join-Path $ROOT .. "patches" "mysql" $MYSQL_VERSION "windows")) {
+if (Test-Path ( Join-Path $ROOT "patches" "mysql" $MYSQL_VERSION "windows")) {
     Set-Location ( Join-Path $RUNNER_TEMP "mysql-server-mysql-$MYSQL_VERSION" )
-    Get-Content ( Join-Path $ROOT .. "patches" "mysql" $MYSQL_VERSION "windows" *.patch ) | patch -s -f -p1
+    Get-Content ( Join-Path $ROOT "patches" "mysql" $MYSQL_VERSION "windows" *.patch ) | patch -s -f -p1
 }
 Write-Host "::endgroup::"
 
