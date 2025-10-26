@@ -22,7 +22,7 @@ jobs:
             echo "suffix=$(date +%Y%m%d%H%M%S)"
             echo "matrix-releases=$(printenv MYSQL_VERSIONS | jq -c '{mysql: .}')"
             echo "matrix-linux=$(printenv MYSQL_VERSIONS | jq -c '{mysql: . , os: ["ubuntu-24.04", "ubuntu-22.04", "ubuntu-24.04-arm", "ubuntu-22.04-arm"]}')"
-            echo "matrix-darwin=$(printenv MYSQL_VERSIONS | jq -c '{mysql: ., os: ["macos-13", "macos-14"]}')"
+            echo "matrix-darwin=$(printenv MYSQL_VERSIONS | jq -c '{mysql: ., os: ["macos-15-intel", "macos-14"]}')"
             echo "matrix-windows=$(printenv MYSQL_VERSIONS | jq -c '{mysql: .}')"
           } >> "$GITHUB_OUTPUT"
         env:
