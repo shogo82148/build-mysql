@@ -30,8 +30,6 @@ JOBS=$(sysctl -n hw.logicalcpu_max)
 mkdir -p "$RUNNER_TEMP"
 cd "$RUNNER_TEMP"
 
-ACTION_VERSION=$(jq -r '.version' < "$ROOT/../package.json")
-
 if [[ "$MARIADB_VERSION" =~ ^10\.([89]|[1-9][0-9]+)\.|^1[1-9]\. ]]; then # MariaDB 10.8 or later
     # build OpenSSL v3
     export OPENSSL_VERSION=$OPENSSL_VERSION3
@@ -114,10 +112,10 @@ echo "::group::extract MariaDB source"
     tar zxf mariadb-src.tar.gz
 
     # apply patches
-    if [[ -d "$ROOT/../patches/mariadb/$MARIADB_VERSION" ]]
+    if [[ -d "$ROOT/patches/mariadb/$MARIADB_VERSION" ]]
     then
         cd "mariadb-$MARIADB_VERSION"
-        cat "$ROOT/../patches/mariadb/$MARIADB_VERSION"/*.patch | patch -s -f -p1
+        cat "$ROOT/patches/mariadb/$MARIADB_VERSION"/*.patch | patch -s -f -p1
     fi
 )
 echo "::endgroup::"
@@ -129,7 +127,7 @@ echo "::group::build MariaDB"
     mkdir build
     cd build
     cmake "../mariadb-$MARIADB_VERSION" \
-        -DCOMPILATION_COMMENT="shogo82148/actions-setup-mysql@v$ACTION_VERSION" \
+        -DCOMPILATION_COMMENT="shogo82148/build-mysql" \
         -DDOWNLOAD_BOOST=1 -DWITH_BOOST=../boost \
         -DWITH_ROCKSDB_LZ4=OFF -DWITH_ROCKSDB_BZip2=OFF -DWITH_ROCKSDB_Snappy=OFF -DWITH_ROCKSDB_ZSTD=OFF \
         -DWITH_UNIT_TESTS=OFF \

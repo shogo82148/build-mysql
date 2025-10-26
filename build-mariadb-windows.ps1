@@ -12,8 +12,6 @@ if ($null -eq $RUNNER_TOOL_CACHE) {
 }
 $PREFIX = Join-Path $RUNNER_TOOL_CACHE "mariadb" $MARIADB_VERSION "x64"
 
-$ACTION_VERSION = Get-Content (Join-Path $ROOT ".." "package.json") | jq -r ".version"
-
 Write-Host "::group::Set up Visual Studio 2022"
 New-Item $RUNNER_TEMP -ItemType Directory -Force
 Set-Location "$RUNNER_TEMP"
@@ -109,9 +107,9 @@ Invoke-WebRequest "https://downloads.mariadb.org/rest-api/mariadb/$MARIADB_VERSI
 Write-Host "Untar..."
 tar zxvf mariadb-src.tar.gz
 Remove-Item -Path "mariadb-src.tar.gz"
-if (Test-Path ( Join-Path $ROOT .. "patches" "mariadb" $MARIADB_VERSION )) {
+if (Test-Path ( Join-Path $ROOT "patches" "mariadb" $MARIADB_VERSION )) {
     Set-Location "mariadb-$MARIADB_VERSION"
-    Get-Content ( Join-Path $ROOT .. "patches" "mariadb" $MARIADB_VERSION *.patch ) | patch -s -f -p1
+    Get-Content ( Join-Path $ROOT "patches" "mariadb" $MARIADB_VERSION *.patch ) | patch -s -f -p1
 }
 Write-Host "::endgroup::"
 
@@ -123,7 +121,7 @@ $BOOST = Join-Path $RUNNER_TEMP "boost"
 New-Item "build" -ItemType Directory -Force
 Set-Location build
 cmake ( Join-Path $RUNNER_TEMP "mariadb-$MARIADB_VERSION" ) `
-    -DCOMPILATION_COMMENT="shogo82148/actions-setup-mysql@v$ACTION_VERSION" `
+    -DCOMPILATION_COMMENT="shogo82148/build-mysql" `
     -DDOWNLOAD_BOOST=1 -DWITH_BOOST="$BOOST" `
     -DWITH_ROCKSDB_LZ4=OFF -DWITH_ROCKSDB_BZip2=OFF -DWITH_ROCKSDB_Snappy=OFF -DWITH_ROCKSDB_ZSTD=OFF `
     -DWITH_UNIT_TESTS=OFF `
