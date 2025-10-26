@@ -42,6 +42,7 @@ jobs:
       matrix: ${{ fromJson(needs.list.outputs.matrix-releases) }}
     timeout-minutes: 5
     steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: create release
         run: |
           gh release create "mysql-$MYSQL_VERSION-$SUFFIX" --draft --title "MySQL $MYSQL_VERSION" --notes "MySQL $MYSQL_VERSION built by shogo82148/build-mysql"
@@ -167,6 +168,7 @@ jobs:
       matrix: ${{ fromJson(needs.list.outputs.matrix-releases) }}
     timeout-minutes: 5
     steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: publish release
         run: |
           gh release edit "mysql-$MYSQL_VERSION-$SUFFIX" --draft=false
