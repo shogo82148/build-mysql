@@ -42,7 +42,7 @@ jobs:
       matrix: ${{ fromJson(needs.list.outputs.matrix-releases) }}
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - name: create release
         run: |
           gh release create "mysql-$MYSQL_VERSION-$SUFFIX" --draft --title "MySQL $MYSQL_VERSION" --notes "MySQL $MYSQL_VERSION built by shogo82148/build-mysql"
@@ -59,7 +59,7 @@ jobs:
       matrix: ${{ fromJson(needs.list.outputs.matrix-linux) }}
     timeout-minutes: 180
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - name: build MySQL
         run: ./build-mysql-linux.sh "$MYSQL_VERSION"
         env:
@@ -98,7 +98,7 @@ jobs:
       matrix: ${{ fromJson(needs.list.outputs.matrix-darwin) }}
     timeout-minutes: 180
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - name: install bison
         run: |
           # pre-installed version is too old.
@@ -141,7 +141,7 @@ jobs:
       matrix: ${{ fromJson(needs.list.outputs.matrix-windows) }}
     timeout-minutes: 180
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - name: build MySQL
         run: .\build-mysql-windows.ps1 $env:MYSQL_VERSION
         env:
@@ -168,7 +168,7 @@ jobs:
       matrix: ${{ fromJson(needs.list.outputs.matrix-releases) }}
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - name: publish release
         run: |
           gh release edit "mysql-$MYSQL_VERSION-$SUFFIX" --draft=false
