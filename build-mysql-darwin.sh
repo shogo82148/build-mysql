@@ -30,6 +30,7 @@ JOBS=$(sysctl -n hw.logicalcpu_max)
 mkdir -p "$RUNNER_TEMP"
 cd "$RUNNER_TEMP"
 
+# pre-installed clang is too old. we need clang 17.
 echo "::group::install clang"
 brew install llvm@17
 PATH="$(brew --prefix llvm@17)/bin:$PATH"
