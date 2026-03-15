@@ -30,6 +30,14 @@ JOBS=$(sysctl -n hw.logicalcpu_max)
 mkdir -p "$RUNNER_TEMP"
 cd "$RUNNER_TEMP"
 
+echo "::group::install clang"
+brew install llvm@17
+PATH="$(brew --prefix llvm@17)/bin:$PATH"
+export PATH
+cc --version
+c++ --version
+echo "::endgroup::"
+
 # system SSL/TLS library is too old. so we use custom build.
 
 if [[ "$MYSQL_VERSION" =~ ^([1-9][0-9][.]|[89][.]) ]]; then # MySQL 8.0 or later
