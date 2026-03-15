@@ -30,6 +30,13 @@ JOBS=$(sysctl -n hw.logicalcpu_max)
 mkdir -p "$RUNNER_TEMP"
 cd "$RUNNER_TEMP"
 
+# pre-installed cmake is too new (4.x). we need cmake 3.x
+echo "::group::install cmake"
+curl --retry 3 -sSL https://github.com/Kitware/CMake/releases/download/v3.31.11/cmake-3.31.11-macos10.10-universal.tar.gz -o cmake.tar.gz
+tar zxf cmake.tar.gz
+export PATH="$RUNNER_TEMP/cmake-3.31.11-macos10.10-universal/CMake.app/Contents/bin:$PATH"
+echo "::endgroup::"
+
 if [[ "$MARIADB_VERSION" =~ ^10\.([89]|[1-9][0-9]+)\.|^1[1-9]\. ]]; then # MariaDB 10.8 or later
     # build OpenSSL v3
     export OPENSSL_VERSION=$OPENSSL_VERSION3
