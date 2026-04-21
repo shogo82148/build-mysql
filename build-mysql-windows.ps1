@@ -1,6 +1,6 @@
 Param($MYSQL_VERSION)
 $OPENSSL_VERSION1_1_1 = "1_1_1w"
-$OPENSSL_VERSION3 = "3.6.1"
+$OPENSSL_VERSION4 = "4.0.0"
 $ROOT = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RUNNER_TEMP = $env:RUNNER_TEMP
 if ($null -eq $RUNNER_TEMP) {
@@ -58,8 +58,8 @@ Write-Host "::endgroup::"
 # system SSL/TLS library is too old. so we use custom build.
 if ( $MYSQL_VERSION -match '^([1-9][0-9][.]|[89][.])') # MySQL 8.0 or later
 {
-    $OPENSSL_VERSION = $OPENSSL_VERSION3
-    Write-Host "::group::fetch OpenSSL 3 source"
+    $OPENSSL_VERSION = $OPENSSL_VERSION4
+    Write-Host "::group::fetch OpenSSL 4 source"
     Set-Location "$RUNNER_TEMP"
     Write-Host "Downloading zip archive..."
     Invoke-WebRequest "https://github.com/openssl/openssl/archive/openssl-$OPENSSL_VERSION.zip" -OutFile "openssl.zip"
@@ -68,7 +68,7 @@ if ( $MYSQL_VERSION -match '^([1-9][0-9][.]|[89][.])') # MySQL 8.0 or later
     Remove-Item -Path "openssl.zip"
     Write-Host "::endgroup::"
 
-    Write-Host "::group::build OpenSSL 3"
+    Write-Host "::group::build OpenSSL 4"
     Set-Location "$RUNNER_TEMP"
     Set-Location "openssl-openssl-$OPENSSL_VERSION"
 
@@ -84,7 +84,7 @@ if ( $MYSQL_VERSION -match '^([1-9][0-9][.]|[89][.])') # MySQL 8.0 or later
     Write-Host "::endgroup::"
 } else {
     $OPENSSL_VERSION = $OPENSSL_VERSION1_1_1
-    Write-Host "::group::fetch OpenSSL 1.1 source"
+    Write-Host "::group::fetch OpenSSL 1.1.1 source"
     Set-Location "$RUNNER_TEMP"
     Write-Host "Downloading zip archive..."
     Invoke-WebRequest "https://github.com/openssl/openssl/archive/OpenSSL_$OPENSSL_VERSION.zip" -OutFile "openssl.zip"
@@ -93,7 +93,7 @@ if ( $MYSQL_VERSION -match '^([1-9][0-9][.]|[89][.])') # MySQL 8.0 or later
     Remove-Item -Path "openssl.zip"
     Write-Host "::endgroup::"
 
-    Write-Host "::group::build OpenSSL 1.1"
+    Write-Host "::group::build OpenSSL 1.1.1"
     Set-Location "$RUNNER_TEMP"
     Set-Location "openssl-OpenSSL_$OPENSSL_VERSION"
 

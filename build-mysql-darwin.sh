@@ -4,7 +4,7 @@ set -e
 
 MYSQL_VERSION=$1
 OPENSSL_VERSION1_1_1=1_1_1w
-OPENSSL_VERSION3=3.6.1
+OPENSSL_VERSION4=4.0.0
 ROOT=$(cd "$(dirname "$0")" && pwd)
 : "${RUNNER_TEMP:=$ROOT/working}"
 : "${RUNNER_TOOL_CACHE:=$RUNNER_TEMP/dist}"
@@ -33,9 +33,9 @@ cd "$RUNNER_TEMP"
 # system SSL/TLS library is too old. so we use custom build.
 
 if [[ "$MYSQL_VERSION" =~ ^([1-9][0-9][.]|[89][.]) ]]; then # MySQL 8.0 or later
-    # build OpenSSL v3
-    export OPENSSL_VERSION=$OPENSSL_VERSION3
-    echo "::group::download OpenSSL 3 source"
+    # build OpenSSL v4
+    export OPENSSL_VERSION=$OPENSSL_VERSION4
+    echo "::group::download OpenSSL 4 source"
     (
         set -eux
         cd "$RUNNER_TEMP"
@@ -43,7 +43,7 @@ if [[ "$MYSQL_VERSION" =~ ^([1-9][0-9][.]|[89][.]) ]]; then # MySQL 8.0 or later
     )
     echo "::endgroup::"
 
-    echo "::group::extract OpenSSL 3 source"
+    echo "::group::extract OpenSSL 4 source"
     (
         set -eux
         cd "$RUNNER_TEMP"
@@ -51,7 +51,7 @@ if [[ "$MYSQL_VERSION" =~ ^([1-9][0-9][.]|[89][.]) ]]; then # MySQL 8.0 or later
     )
     echo "::endgroup::"
 
-    echo "::group::build OpenSSL 3"
+    echo "::group::build OpenSSL 4"
     (
         set -eux
         cd "$RUNNER_TEMP/openssl-openssl-$OPENSSL_VERSION"
@@ -64,7 +64,7 @@ if [[ "$MYSQL_VERSION" =~ ^([1-9][0-9][.]|[89][.]) ]]; then # MySQL 8.0 or later
 else
     # build OpenSSL v1.1.1
     export OPENSSL_VERSION=$OPENSSL_VERSION1_1_1
-    echo "::group::download OpenSSL 1.1 source"
+    echo "::group::download OpenSSL 1.1.1 source"
     (
         set -eux
         cd "$RUNNER_TEMP"
