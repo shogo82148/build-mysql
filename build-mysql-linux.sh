@@ -76,7 +76,7 @@ echo "::group::install dependencies"
 (
     set -eux
     sudo apt-get update
-    sudo apt-get install -y libtirpc-dev libudev-dev
+    sudo apt-get install -y libtirpc-dev libudev-dev libcurl4-openssl-dev
 )
 echo "::endgroup::"
 
