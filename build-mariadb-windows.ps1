@@ -141,10 +141,8 @@ Write-Host "::group::install"
 Set-Location "$RUNNER_TEMP\build"
 if ( $MARIADB_VERSION -match '^1[12][.]') # # MariaDB 11.x or 12.x
 {
-    devenv MariaDB.sln /build RelWithDebInfo /project initial_database
     devenv MariaDB.sln /build RelWithDebInfo /project package
 } else {
-    devenv MySQL.sln /build RelWithDebInfo /project initial_database
     devenv MySQL.sln /build RelWithDebInfo /project package
 }
 Write-Host "::endgroup::"
