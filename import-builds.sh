@@ -6,8 +6,7 @@ ROOT=$(cd "$(dirname "$0")" && pwd)
 
 mkdir -p "$ROOT/tmp"
 
-# https://github.com/shogo82148/actions-setup-mysql/releases/latest
-ACTIONS_RELEASE_VER="v1.51.0"
+ACTIONS_RELEASE_VER="v1.45.0"
 
 for MYSQL_VERSION in "9.4.0" "9.3.0" "9.2.0" "9.1.0" "9.0.1" "8.4.6" "8.3.0" "8.2.0" "8.1.0" "8.0.42" "5.7.44" "5.6.51"; do
   cd "$ROOT"
