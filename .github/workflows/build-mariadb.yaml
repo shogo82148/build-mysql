@@ -21,7 +21,7 @@ jobs:
           {
             echo "suffix=$(date +%Y%m%d%H%M%S)"
             echo "matrix-releases=$(printenv MARIADB_VERSIONS | jq -c '{mariadb: .}')"
-            echo "matrix-linux=$(printenv MARIADB_VERSIONS | jq -c '{mariadb: . , os: ["ubuntu-24.04", "ubuntu-22.04", "ubuntu-24.04-arm", "ubuntu-22.04-arm"]}')"
+            echo "matrix-linux=$(printenv MARIADB_VERSIONS | jq -c '{mariadb: . , os: ["ubuntu-26.04", "ubuntu-24.04", "ubuntu-22.04", "ubuntu-26.04-arm", "ubuntu-24.04-arm", "ubuntu-22.04-arm"]}')"
             echo "matrix-darwin=$(printenv MARIADB_VERSIONS | jq -c '{mariadb: ., os: ["macos-15-intel", "macos-14"]}')"
             echo "matrix-windows=$(printenv MARIADB_VERSIONS | jq -c '{mariadb: .}')"
           } >> "$GITHUB_OUTPUT"
@@ -52,7 +52,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-linux:
-    runs-on: ${{ matrix.os}}
+    runs-on: ${{ matrix.os }}
     needs: [list, create-releases]
     strategy:
       fail-fast: false
