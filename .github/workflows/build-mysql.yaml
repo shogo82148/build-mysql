@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   list:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - id: set-matrix
         run: |
@@ -35,7 +35,7 @@ jobs:
       matrix-windows: ${{ steps.set-matrix.outputs.matrix-windows }}
 
   create-releases:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs: list
     strategy:
       fail-fast: false
@@ -161,7 +161,7 @@ jobs:
           subject-path: C:\Temp\*.zip
 
   publish-releases:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs: [list, build-linux, build-darwin, build-windows]
     strategy:
       fail-fast: false
