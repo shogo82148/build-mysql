@@ -37,7 +37,9 @@ tar zxf cmake.tar.gz
 export PATH="$RUNNER_TEMP/cmake-3.31.12-macos10.10-universal/CMake.app/Contents/bin:$PATH"
 echo "::endgroup::"
 
-if [[ "$MARIADB_VERSION" =~ ^10\.([89]|[1-9][0-9]+)\.|^1[1-9]\. ]]; then # MariaDB 10.8 or later
+# OpenSSL 1.1.1 is EOL (2023-09). MariaDB 10.6.5+ supports OpenSSL 3, so build
+# 10.6/10.7 against OpenSSL 3 too, keeping the bundled OpenSSL consistent across platforms.
+if [[ "$MARIADB_VERSION" =~ ^10\.([6789]|[1-9][0-9]+)\.|^1[1-9]\. ]]; then # MariaDB 10.6 or later
     # build OpenSSL v3
     export OPENSSL_VERSION=$OPENSSL_VERSION3
     echo "::group::download OpenSSL 3 source"

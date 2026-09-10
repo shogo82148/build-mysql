@@ -37,7 +37,10 @@ Write-Host "::endgroup::"
 
 
 # system SSL/TLS library is too old. so we use custom build.
-if ( $MARIADB_VERSION -match '^10\.([89]|[1-9][0-9]+)\.|^1[1-9]\.' ) # # MariaDB 10.8 or later
+# NOTE: OpenSSL 1.1.1 is EOL (2023-09) and a self-built 1.1.1 mariadbd crashes on
+# --bootstrap with the current MSVC toolchain (silent failure in the initial_database
+# step). MariaDB 10.6.5+ supports OpenSSL 3, so build 10.6/10.7 against OpenSSL 3 too.
+if ( $MARIADB_VERSION -match '^10\.([6789]|[1-9][0-9]+)\.|^1[1-9]\.' ) # # MariaDB 10.6 or later
 {
     $OPENSSL_VERSION = $OPENSSL_VERSION3
     Write-Host "::group::fetch OpenSSL 3 source"
