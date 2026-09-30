@@ -122,11 +122,11 @@ else
     $BISON_PREFIX = Join-Path "C:" "GnuWin32"
     Set-Location "$RUNNER_TEMP"
     Write-Host "Downloading zip archive of binary..."
-    Invoke-WebRequest "https://versaweb.dl.sourceforge.net/project/gnuwin32/bison/$BISON_VERSION/bison-$BISON_VERSION-bin.zip" -OutFile "bison-bin.zip"
+    Invoke-WebRequest "https://downloads.sourceforge.net/project/gnuwin32/bison/$BISON_VERSION/bison-$BISON_VERSION-bin.zip" -UserAgent "Wget" -OutFile "bison-bin.zip"
     Write-Host "Unzipping..."
     Expand-Archive -Path "bison-bin.zip" -DestinationPath "$BISON_PREFIX"
     Write-Host "Downloading zip archive of dependencies..."
-    Invoke-WebRequest "https://versaweb.dl.sourceforge.net/project/gnuwin32/bison/$BISON_VERSION/bison-$BISON_VERSION-dep.zip" -OutFile "bison-dep.zip"
+    Invoke-WebRequest "https://downloads.sourceforge.net/project/gnuwin32/bison/$BISON_VERSION/bison-$BISON_VERSION-dep.zip" -UserAgent "Wget" -OutFile "bison-dep.zip"
     Write-Host "Unzipping..."
     Expand-Archive -Path "bison-dep.zip" -DestinationPath "$BISON_PREFIX"
     Set-Item -Path "env:PATH" "$(Join-Path $BISON_PREFIX "bin");$env:PATH"
@@ -190,6 +190,7 @@ else
         -DCOMPILATION_COMMENT="shogo82148/build-mysql" `
         -DDOWNLOAD_BOOST=1 -DWITH_BOOST="$BOOST" `
         -DWITH_ROCKSDB_LZ4=0 -DWITH_ROCKSDB_BZip2=0 -DWITH_ROCKSDB_Snappy=0 -DWITH_ROCKSDB_ZSTD=0 `
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 `
         -DWITH_UNIT_TESTS=0 `
         -DCMAKE_INSTALL_PREFIX="$PREFIX" `
         -DWITH_SSL="$PREFIX" `
