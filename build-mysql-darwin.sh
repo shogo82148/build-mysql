@@ -162,6 +162,7 @@ echo "::group::build MySQL"
             -DCOMPILATION_COMMENT="shogo82148/build-mysql" \
             -DDOWNLOAD_BOOST=1 -DWITH_BOOST=../boost \
             -DWITH_ROCKSDB_LZ4=0 -DWITH_ROCKSDB_BZip2=0 -DWITH_ROCKSDB_Snappy=0 -DWITH_ROCKSDB_ZSTD=0 \
+            -DCMAKE_CXX_FLAGS="-Wno-enum-constexpr-conversion" \
             -DWITH_UNIT_TESTS=0 \
             -DCMAKE_INSTALL_PREFIX="$PREFIX" \
             -DWITH_SSL="$PREFIX"
