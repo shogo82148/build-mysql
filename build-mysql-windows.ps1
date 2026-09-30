@@ -106,6 +106,10 @@ if ( $MYSQL_VERSION -match '^([1-9][0-9][.]|[89][.])') # MySQL 8.0 or later
     # remove debug information
     Get-ChildItem "$PREFIX" -Include *.pdb -Recurse | Remove-Item
 
+    # libmysql.dll depends on the OpenSSL DLLs.
+    # add them to PATH so that the test programs run during the build can find them.
+    Set-Item -Path "env:PATH" "$(Join-Path $PREFIX "bin");$env:PATH"
+
     Write-Host "::endgroup::"
 }
 
@@ -190,7 +194,6 @@ else
         -DCOMPILATION_COMMENT="shogo82148/build-mysql" `
         -DDOWNLOAD_BOOST=1 -DWITH_BOOST="$BOOST" `
         -DWITH_ROCKSDB_LZ4=0 -DWITH_ROCKSDB_BZip2=0 -DWITH_ROCKSDB_Snappy=0 -DWITH_ROCKSDB_ZSTD=0 `
-        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 `
         -DWITH_UNIT_TESTS=0 `
         -DCMAKE_INSTALL_PREFIX="$PREFIX" `
         -DWITH_SSL="$PREFIX" `
