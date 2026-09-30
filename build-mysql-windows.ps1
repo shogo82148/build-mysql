@@ -106,6 +106,10 @@ if ( $MYSQL_VERSION -match '^([1-9][0-9][.]|[89][.])') # MySQL 8.0 or later
     # remove debug information
     Get-ChildItem "$PREFIX" -Include *.pdb -Recurse | Remove-Item
 
+    # libmysql.dll depends on the OpenSSL DLLs.
+    # add them to PATH so that the test programs run during the build can find them.
+    Set-Item -Path "env:PATH" "$(Join-Path $PREFIX "bin");$env:PATH"
+
     Write-Host "::endgroup::"
 }
 
@@ -122,11 +126,11 @@ else
     $BISON_PREFIX = Join-Path "C:" "GnuWin32"
     Set-Location "$RUNNER_TEMP"
     Write-Host "Downloading zip archive of binary..."
-    Invoke-WebRequest "https://versaweb.dl.sourceforge.net/project/gnuwin32/bison/$BISON_VERSION/bison-$BISON_VERSION-bin.zip" -OutFile "bison-bin.zip"
+    Invoke-WebRequest "https://downloads.sourceforge.net/project/gnuwin32/bison/$BISON_VERSION/bison-$BISON_VERSION-bin.zip" -UserAgent "Wget" -OutFile "bison-bin.zip"
     Write-Host "Unzipping..."
     Expand-Archive -Path "bison-bin.zip" -DestinationPath "$BISON_PREFIX"
     Write-Host "Downloading zip archive of dependencies..."
-    Invoke-WebRequest "https://versaweb.dl.sourceforge.net/project/gnuwin32/bison/$BISON_VERSION/bison-$BISON_VERSION-dep.zip" -OutFile "bison-dep.zip"
+    Invoke-WebRequest "https://downloads.sourceforge.net/project/gnuwin32/bison/$BISON_VERSION/bison-$BISON_VERSION-dep.zip" -UserAgent "Wget" -OutFile "bison-dep.zip"
     Write-Host "Unzipping..."
     Expand-Archive -Path "bison-dep.zip" -DestinationPath "$BISON_PREFIX"
     Set-Item -Path "env:PATH" "$(Join-Path $BISON_PREFIX "bin");$env:PATH"

@@ -5,6 +5,7 @@ set -e
 MYSQL_VERSION=$1
 OPENSSL_VERSION1_1_1=1_1_1w
 OPENSSL_VERSION3=3.5.9
+CMAKE_VERSION3=3.31.12
 ROOT=$(cd "$(dirname "$0")" && pwd)
 : "${RUNNER_TEMP:=$ROOT/working}"
 : "${RUNNER_TOOL_CACHE:=$RUNNER_TEMP/dist}"
@@ -145,6 +146,22 @@ else
         make "-j$JOBS"
         make install_sw install_ssldirs
     )
+    echo "::endgroup::"
+fi
+
+if ! [[ "$MYSQL_VERSION" =~ ^([1-9][0-9][.]|[89][.]) ]]; then # MySQL 5.7 or earlier
+    # MySQL 5.7 depends on CMake policies that were removed in CMake 4.0.
+    # so we use CMake 3.x.
+    echo "::group::set up CMake $CMAKE_VERSION3"
+    (
+        set -eux
+        cd "$RUNNER_TEMP"
+        curl --retry 3 -sSL "https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION3/cmake-$CMAKE_VERSION3-linux-$(uname -m).tar.gz" -o cmake.tar.gz
+        mkdir -p cmake
+        tar zxf cmake.tar.gz -C cmake --strip-components=1
+    )
+    export PATH="$RUNNER_TEMP/cmake/bin:$PATH"
+    cmake --version
     echo "::endgroup::"
 fi
 
